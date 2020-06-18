@@ -16,6 +16,7 @@ module.exports = {
       date: '',
       date_from: '',
       date_to: '',
+      rejection_reason: '',
       prison_transfer_reason: {
         jsonApi: 'hasOne',
         type: 'prison_transfer_reasons',
@@ -43,6 +44,14 @@ module.exports = {
       allocation: {
         jsonApi: 'hasOne',
         type: 'allocations',
+      },
+      original_move: {
+        jsonApi: 'hasOne',
+        type: 'moves',
+      },
+      profile: {
+        jsonApi: 'hasOne',
+        type: 'profiles',
       },
     },
     options: {
