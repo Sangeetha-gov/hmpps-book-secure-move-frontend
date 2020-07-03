@@ -1,14 +1,4 @@
-const policePermissions = [
-  'moves:view:outgoing',
-  'moves:view:incoming',
-  'moves:download',
-  'move:view',
-  'move:create',
-  'move:create:court_appearance',
-  'move:create:prison_recall',
-  'move:cancel',
-  'move:update',
-]
+const policePermissions = []
 
 const secureChildrensHomePermissions = [
   'moves:view:outgoing',
