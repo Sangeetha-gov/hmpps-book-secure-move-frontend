@@ -1,5 +1,17 @@
 {% extends "layouts/two-column.njk" %}
 
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      {
+        text: "Person escort record"
+      }
+    ]
+  }) }}
+
+  {{ super() }}
+{% endblock %}
+
 {% block contentHeader %}
   <header class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
