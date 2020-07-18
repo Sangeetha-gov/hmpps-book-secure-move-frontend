@@ -5,6 +5,7 @@ const request = require('./request')
 const requestHeaders = require('./request-headers')
 const requestInclude = require('./request-include')
 const requestTimeout = require('./request-timeout')
+const resTransform = require('./res-transform')
 
 module.exports = {
   auth,
@@ -14,4 +15,5 @@ module.exports = {
   requestHeaders,
   requestInclude,
   requestTimeout,
+  resTransform,
 }

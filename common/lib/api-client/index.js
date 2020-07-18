@@ -10,6 +10,7 @@ const {
   requestHeaders,
   requestInclude,
   requestTimeout,
+  resTransform,
 } = require('./middleware')
 const models = require('./models')
 
@@ -41,6 +42,8 @@ module.exports = function () {
   if (API.CLIENT_ID && API.SECRET) {
     instance.insertMiddlewareBefore('axios-request', auth)
   }
+
+  instance.insertMiddlewareAfter('response', resTransform)
 
   // define models
   Object.entries(models).forEach(([modelName, model]) => {

@@ -36,6 +36,7 @@ const referenceDataService = {
         const hasNext = links.next && data.length !== 0
 
         if (!hasNext) {
+          // console.log(locations)
           return sortBy(locations, 'title')
         }
 

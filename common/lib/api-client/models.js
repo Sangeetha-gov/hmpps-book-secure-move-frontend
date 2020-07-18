@@ -1,3 +1,8 @@
+const JsonApi = require('devour-client')
+
+const jsonApi = new JsonApi({})
+console.log(jsonApi)
+
 module.exports = {
   move: {
     fields: {
@@ -60,6 +65,12 @@ module.exports = {
         'profile.person.gender',
         'to_location',
       ],
+      transform: (rawItem, included) => {
+        console.log(rawItem)
+        console.log(included)
+        // return jsonApi.resource.call()
+        return { customStuff: true }
+      },
     },
   },
   image: {
