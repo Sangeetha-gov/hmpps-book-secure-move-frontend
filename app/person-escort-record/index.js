@@ -11,11 +11,9 @@ const { frameworkOverviewController } = require('./controllers')
 const { setFramework, setPersonEscortRecord } = require('./middleware')
 const { defineFormWizards } = require('./router')
 
-const framework = frameworksService.getPersonEscortRecord()
-const frameworkWizard = defineFormWizards(framework)
+const frameworkWizard = defineFormWizards()
 
 // Define shared middleware
-router.use(setFramework(framework))
 router.use(setPersonEscortRecord)
 router.use(frameworkWizard)
 
