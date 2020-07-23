@@ -15,9 +15,10 @@
     {% for key, section in sections %}
       {% if canAccess(section.permission) %}
         <section class="govuk-grid-column-one-half govuk-!-margin-bottom-6">
-          <h2 class="govuk-heading-m govuk-!-margin-bottom-3">
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
             {{ t(section.heading) }}
           </h2>
+          <p class="govuk-heading-m">{{ section.time }} <span class="app-secondary-text-colour">({{ t(section.timeAsWords) }})</span></p>
 
           {{ appFilter({
             items: section.filter,
