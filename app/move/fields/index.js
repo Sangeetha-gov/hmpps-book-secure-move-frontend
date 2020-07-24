@@ -37,6 +37,7 @@ const shouldSaveCourtHearings = require('./should-save-court-hearings')
 const specialVehicleCheck = require('./special-vehicle-check')
 const toLocation = require('./to-location')
 const toLocationCourtAppearance = require('./to-location-court-appearance')
+const toLocationHospital = require('./to-location-hospital')
 const toLocationPoliceTransfer = require('./to-location-police-transfer')
 const toLocationPrisonTransfer = require('./to-location-prison-transfer')
 
@@ -104,6 +105,7 @@ const createFields = {
   should_save_court_hearings: shouldSaveCourtHearings,
   to_location: toLocation,
   to_location_court_appearance: toLocationCourtAppearance,
+  to_location_hospital: toLocationHospital,
   to_location_police_transfer: toLocationPoliceTransfer,
   to_location_prison_transfer: toLocationPrisonTransfer,
   wheelchair: assessmentAnswer(),

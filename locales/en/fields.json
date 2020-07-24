@@ -73,6 +73,9 @@
       "police_transfer": {
         "label": "Police custody (In force moves only)"
       },
+      "hospital": {
+        "label": "Hospital"
+      },
       "video_remand": {
         "label": "Prison remand (Video Remand Hearing)"
       },
@@ -92,6 +95,9 @@
   },
   "to_location_prison_transfer": {
     "label": "Name of prison"
+  },
+  "to_location_hospital": {
+    "label": "Name of hospital"
   },
   "additional_information": {
     "label": "Additional information (optional)"

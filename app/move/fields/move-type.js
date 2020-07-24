@@ -35,6 +35,11 @@ const moveType = {
       text: 'fields::move_type.items.video_remand.label',
       conditional: 'video_remand_comments',
     },
+    {
+      value: 'hospital',
+      text: 'fields::move_type.items.hospital.label',
+      conditional: 'to_location_hospital',
+    },
   ],
 }
 
