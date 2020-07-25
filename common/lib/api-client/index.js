@@ -22,7 +22,8 @@ module.exports = function () {
 
   instance = new JsonApi({
     apiUrl: API.BASE_URL,
-    logger: IS_DEV,
+    logger: false,
+    // logger: IS_DEV,
   })
 
   instance.replaceMiddleware('errors', errors)

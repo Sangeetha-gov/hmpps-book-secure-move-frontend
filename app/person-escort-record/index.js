@@ -7,7 +7,10 @@ const frameworksService = require('../../common/services/frameworks')
 
 const confirmApp = require('./app/confirm')
 const newApp = require('./app/new')
-const { frameworkOverviewController } = require('./controllers')
+const {
+  frameworkOverviewController,
+  printRecordController,
+} = require('./controllers')
 const { setFramework, setPersonEscortRecord } = require('./middleware')
 const { defineFormWizards } = require('./router')
 
@@ -25,6 +28,7 @@ router.use(confirmApp.mountpath, confirmApp.router)
 
 // Define routes
 router.get('/', frameworkOverviewController)
+router.get('/print', printRecordController)
 
 // Export
 module.exports = {

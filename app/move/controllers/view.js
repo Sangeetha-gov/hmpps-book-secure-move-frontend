@@ -28,11 +28,13 @@ module.exports = function view(req, res) {
     assessment_answers: assessmentAnswers = [],
     person_escort_record: personEscortRecord,
   } = profile || {}
-  const personEscortRecordIsComplete = personEscortRecord?.status === 'complete'
+  const personEscortRecordIsCompleted =
+    personEscortRecord?.status === 'completed'
+  const personEscortRecordIsConfirmed =
+    personEscortRecord?.status === 'confirmed'
   const personEscortRecordUrl = `${originalUrl}/person-escort-record`
   const showPersonEscortRecordBanner =
     FEATURE_FLAGS.PERSON_ESCORT_RECORD &&
-    personEscortRecord?.status !== 'confirmed' &&
     move.status === 'requested' &&
     move.profile?.id !== undefined
   const personEscortRecordtaskList = presenters.frameworkToTaskListComponent({
@@ -47,7 +49,8 @@ module.exports = function view(req, res) {
   const locals = {
     move,
     personEscortRecord,
-    personEscortRecordIsComplete,
+    personEscortRecordIsCompleted,
+    personEscortRecordIsConfirmed,
     personEscortRecordUrl,
     personEscortRecordtaskList,
     showPersonEscortRecordBanner,
