@@ -162,6 +162,13 @@
       }
     }
   },
+  "hospital_appointment__start_time": {
+    "label": "Time of appointment"
+  },
+  "hospital_appointment__contact_details": {
+    "label": "Details of contact in hospital",
+    "hint": "Provide name and contact information"
+  },
   "risk": {
     "label": "Add risk information",
     "hint": "Select all that apply"

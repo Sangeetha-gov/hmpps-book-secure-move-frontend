@@ -22,6 +22,8 @@ const gender = require('./gender')
 const genderAdditionalInformation = require('./gender-additional-information')
 const hasCourtCase = require('./has-court-case')
 const hasDateTo = require('./has-date-to')
+const hospitalAppointmentContactDetails = require('./hospital-appointment-contact-details')
+const hospitalAppointmentStartTime = require('./hospital-appointment-start-time')
 const lastName = require('./last-name')
 const moveAgreed = require('./move-agreed')
 const moveAgreedAssign = require('./move-agreed-assign')
@@ -69,6 +71,8 @@ const createFields = {
   has_date_to: hasDateTo,
   health_issue: assessmentAnswer(),
   hold_separately: assessmentAnswer(),
+  hospital_appointment__start_time: hospitalAppointmentStartTime,
+  hospital_appointment__contact_details: hospitalAppointmentContactDetails,
   interpreter: assessmentAnswer(),
   last_name: lastName,
   medication: assessmentAnswer(),

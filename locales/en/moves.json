@@ -28,6 +28,9 @@
       "heading": "Where is this person moving?",
       "update_link": "where this person is moving to"
     },
+    "hospital_appointment": {
+      "heading": "Hospital information"
+    },
     "hearing_details": {
       "heading": "Is this move associated with a court case?"
     },

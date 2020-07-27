@@ -121,6 +121,11 @@ module.exports = {
     next: [
       {
         field: 'move_type',
+        value: 'hospital',
+        next: 'hospital',
+      },
+      {
+        field: 'move_type',
         value: 'court_appearance',
         next: [
           {
@@ -167,7 +172,7 @@ module.exports = {
           {
             field: 'to_location_type',
             value: 'prison',
-            next: 'move-date-range',
+            next: 'X1move-date-range',
           },
           'move-date',
         ],
@@ -229,6 +234,15 @@ module.exports = {
     next: 'release-status',
     template: 'timetable',
     fields: ['should_save_court_hearings'],
+  },
+  '/hospital': {
+    // controller: HospitalAppointment,
+    pageTitle: 'moves::steps.hospital_appointment.heading',
+    next: ['release-status'],
+    fields: [
+      'hospital_appointment__start_time',
+      'hospital_appointment__contact_details',
+    ],
   },
   '/risk-information': {
     ...riskStep,
