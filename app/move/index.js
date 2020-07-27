@@ -92,7 +92,7 @@ router.use(
 )
 router.use(`/:moveId(${uuidRegex})`, moveRouter)
 
-moveRouter.get('/', protectRoute('move:view'), view)
+moveRouter.get('/', protectRoute('move:view'), setPersonEscortRecord, view)
 moveRouter.get(
   '/confirmation',
   protectRoute(['move:create', 'move:review']),

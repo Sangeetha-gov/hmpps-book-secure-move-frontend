@@ -68,6 +68,8 @@
   ],
   "dependencies": {
     "@hmpps-book-secure-move-frameworks/0.1.0": "github:ministryofjustice/hmpps-book-secure-move-frameworks#v0.1.0",
+    "@hmpps-book-secure-move-frameworks/0.1.1": "github:ministryofjustice/hmpps-book-secure-move-frameworks#add-flags",
+    "@hmpps-book-secure-move-frameworks/0.1.2": "github:ministryofjustice/hmpps-book-secure-move-frameworks#add-flags",
     "@ministryofjustice/frontend": "0.0.19-alpha",
     "@sentry/node": "5.20.0",
     "accessible-autocomplete": "2.0.3",

@@ -45,7 +45,6 @@ module.exports = function assessmentCategoryToPanelListComponent({
   })
 
   return {
-    key,
     panels: values(panels),
   }
 }

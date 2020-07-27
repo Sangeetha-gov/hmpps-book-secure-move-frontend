@@ -6,12 +6,20 @@
   display: block;
 }
 
-.govuk-summary-list__value .govuk-list--spaced > li:last-child {
-  margin-bottom: 0;
+.govuk-summary-list__value,
+.app-meta-list__value {
+  .govuk-list--spaced > li:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .govuk-hint * {
   color: $govuk-secondary-text-colour;
+}
+
+.govuk-section-break--s {
+  margin-bottom: govuk-spacing(2);
+  margin-top: govuk-spacing(2);
 }
 
 .govuk-inset-text--compact {

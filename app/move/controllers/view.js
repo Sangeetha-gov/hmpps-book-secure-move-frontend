@@ -1,6 +1,7 @@
-const { get, sortBy } = require('lodash')
+const { isEmpty, kebabCase, find, get, sortBy, uniqBy } = require('lodash')
 
 const presenters = require('../../../common/presenters')
+const componentService = require('../../../common/services/component')
 const frameworksService = require('../../../common/services/frameworks')
 const { FEATURE_FLAGS, FRAMEWORKS } = require('../../../config')
 const updateSteps = require('../steps/update')
@@ -9,6 +10,23 @@ const getUpdateLinks = require('./view/view.update.links')
 const getUpdateUrls = require('./view/view.update.urls')
 
 const framework = frameworksService.getPersonEscortRecord()
+
+function _mapAssessmentComponent(category) {
+  let params = {}
+
+  if (category.component === 'appPanelList') {
+    params = presenters.assessmentCategoryToPanelComponent(category)
+  }
+
+  if (category.component === 'govukSummaryList') {
+    params = presenters.assessmentToSummaryListComponent(category.answers)
+  }
+
+  return {
+    ...category,
+    params,
+  }
+}
 
 module.exports = function view(req, res) {
   const { move, originalUrl } = req
@@ -23,11 +41,8 @@ module.exports = function view(req, res) {
   const userPermissions = get(req.session, 'user.permissions')
   const updateUrls = getUpdateUrls(updateSteps, move.id, userPermissions)
   const updateActions = getUpdateLinks(updateSteps, updateUrls)
-  const {
-    person,
-    assessment_answers: assessmentAnswers = [],
-    person_escort_record: personEscortRecord,
-  } = profile || {}
+  const { person, assessment_answers: assessmentAnswers = [] } = profile || {}
+  const personEscortRecord = req.personEscortRecord
   const personEscortRecordIsEnabled = FEATURE_FLAGS.PERSON_ESCORT_RECORD
   const personEscortRecordIsComplete =
     personEscortRecord &&
@@ -49,6 +64,14 @@ module.exports = function view(req, res) {
   const urls = {
     update: updateUrls,
   }
+  const assessment = presenters
+    .assessmentAnswersByCategory(assessmentAnswers)
+    .filter(category => category.key !== 'court')
+    .map(_mapAssessmentComponent)
+  const courtSummary = presenters
+    .assessmentAnswersByCategory(assessmentAnswers)
+    .filter(category => category.key === 'court')
+    .map(_mapAssessmentComponent)[0]
 
   const locals = {
     move,
@@ -62,9 +85,7 @@ module.exports = function view(req, res) {
     moveSummary: presenters.moveToMetaListComponent(move, updateActions),
     personalDetailsSummary: presenters.personToSummaryListComponent(person),
     tagList: presenters.assessmentToTagList(assessmentAnswers),
-    assessment: presenters
-      .assessmentAnswersByCategory(assessmentAnswers)
-      .map(presenters.assessmentCategoryToPanelComponent),
+    assessment,
     canCancelMove:
       (userPermissions.includes('move:cancel') &&
         move.status === 'requested' &&
@@ -81,10 +102,89 @@ module.exports = function view(req, res) {
         }
       }
     ),
-    courtSummary: presenters.assessmentToSummaryListComponent(
-      assessmentAnswers,
-      'court'
-    ),
+    courtSummary,
+    // courtSummary: presenters.assessmentToSummaryListComponent(
+    //   assessmentAnswers.filter(answer => answer.category === 'court')
+    // ),
+    assessmentSections: sortBy(framework.sections, 'order').map(section => {
+      const sectionFlags = uniqBy(
+        personEscortRecord?.flags.filter(
+          flag => flag.question.section === section.key
+        ),
+        'title'
+      )
+      const flagsMap = {}
+      const tagList = presenters.frameworkFlagsToTagList(sectionFlags)
+      const responsesWithFlags = personEscortRecord?.responses
+        .filter(response => response.flags.length > 0)
+        .filter(response => response.question.section === section.key)
+        .map(response => {
+          delete response.person_escort_record
+          delete response.question.framework
+          response.flags.forEach(flag => {
+            if (!flagsMap[flag.title]) {
+              flagsMap[flag.title] = []
+            }
+
+            if (response.value_type === 'collection') {
+              flagsMap[flag.title].push({
+                ...response,
+                value: response.value.filter(value => {
+                  return value.option === flag.question_value
+                }),
+              })
+            } else {
+              flagsMap[flag.title].push(response)
+            }
+          })
+
+          return response
+        })
+
+      const bookingAssessment = find(assessment, {
+        key: FRAMEWORKS.assessmentAnswersMap[section.key],
+      })
+
+      return {
+        key: section.key,
+        name: section.name,
+        url: `${personEscortRecordUrl}/${section.key}/overview`,
+        // tagList,
+        // flagsMap,
+        // responsesWithFlags,
+        bookingAssessment,
+        panels: tagList.map(tag => {
+          return {
+            attributes: {
+              id: kebabCase(tag.text),
+            },
+            tag,
+            metaList: {
+              classes: 'app-meta-list--divider',
+              items: flagsMap[tag.text].map(response => {
+                const responseHtml = componentService.getComponent(
+                  'appFrameworkResponse',
+                  {
+                    value: isEmpty(response.value) ? undefined : response.value,
+                    valueType: response.value_type,
+                  }
+                )
+                const question = framework.questions[response.question.key]
+
+                return {
+                  value: {
+                    html: `
+                      <h4 class="govuk-heading-s govuk-!-margin-0">${question.description}</h4>
+                      ${responseHtml}
+                    `,
+                  },
+                }
+              }),
+            },
+          }
+        }),
+      }
+    }),
     messageTitle: bannerStatuses.includes(status)
       ? req.t('statuses::' + status, { context: cancellationReason })
       : undefined,

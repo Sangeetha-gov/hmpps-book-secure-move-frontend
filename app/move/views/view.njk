@@ -204,6 +204,34 @@
   {% endif %}
 {% endmacro %}
 
+{% macro assessmentContent(assessmentCategory) %}
+  {% if assessmentCategory.answers | length %}
+    {% if assessmentCategory.component === 'appPanelList' %}
+      {# <pre>{{assessmentCategory.params|dump(1)}}</pre> #}
+      {% for panel in assessmentCategory.params.panels %}
+        {% call appPanel(panel) %}
+          {{ appMetaList({
+            classes: "app-meta-list--divider",
+            items: panel.items
+          }) }}
+        {% endcall %}
+      {% endfor %}
+    {% else %}
+      {{ callAsMacro(assessmentCategory.component)(assessmentCategory.params) }}
+    {% endif %}
+  {% else %}
+    {{ appMessage({
+      classes: "app-message--muted govuk-!-margin-top-2",
+      allowDismiss: false,
+      content: {
+        text: t('assessment::no_items.text', {
+          context: assessmentCategory.key
+        })
+      }
+    }) }}
+  {% endif %}
+{% endmacro %}
+
 {% block contentMain %}
   {% if move.profile %}
     <div class="govuk-!-margin-bottom-9">
@@ -217,47 +245,18 @@
         {{ updateLink(updateLinks.personal_details) }}
       </section>
 
-      {% include "move/views/_includes/assessment.njk" %}
+      {% if personEscortRecord %}
+        {% include "move/views/_includes/person-escort-record-summary.njk" %}
+      {% else %}
+        {% include "move/views/_includes/assessment.njk" %}
+      {% endif %}
+
+      {% if move.to_location.location_type == 'court' %}
+        {% include "move/views/_includes/court-information.njk" %}
+      {% endif %}
 
       {% if move.from_location.can_upload_documents %}
-        <section class="app-!-position-relative">
-          <h2 class="govuk-heading-m govuk-!-margin-top-7">
-            {{ t("moves::detail.documents.heading", {
-              count: move.profile.documents.length if move.profile.documents.length > 1
-            }) }}
-          </h2>
-
-          {% if move.profile.documents | length %}
-            <ul class="govuk-list">
-              {% for document in move.profile.documents %}
-                <li class="govuk-!-margin-bottom-3">
-                  <a href="{{ document.url }}"
-                    class="govuk-link"
-                    target="_blank"
-                    aria-labelledby="document-{{ loop.index }}">
-                    {{- document.filename -}}
-                  </a>
-                  <span class="govuk-body-s">
-                    ({{ document.filesize | filesize }})
-                  </span>
-                  <div class="govuk-hint govuk-!-font-size-16 govuk-!-margin-bottom-0" id="document-{{ loop.index }}">
-                    ({{ t("opens_new_window") }})
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            {{ appMessage({
-              classes: "app-message--muted",
-              allowDismiss: false,
-              content: {
-                html: t("moves::detail.documents.empty")
-              }
-            }) }}
-          {% endif %}
-
-          {{ updateLink(updateLinks.document) }}
-        </section>
+        {% include "move/views/_includes/documents.njk" %}
       {% endif %}
     </div>
   {% endif %}
@@ -274,13 +273,13 @@
     }) }}
   {% endif %}
 
-  {% if personEscortRecordIsComplete %}
-    <p>
+  {# {% if personEscortRecord and personEscortRecordIsComplete %}
+    <p class="govuk-!-margin-bottom-1">
       <a href="{{ personEscortRecordUrl }}">
         {{ t("actions::view_person_escort_record") }}
       </a>
     </p>
-  {% endif %}
+  {% endif %} #}
 
   {% if canCancelMove %}
     <p class="govuk-!-margin-bottom-0">
@@ -289,6 +288,16 @@
       </a>
     </p>
   {% endif %}
+
+  {% set outputHtml %}
+    <pre>{{assessmentSections|dump(1)}}</pre>
+  {% endset %}
+
+  {{ govukDetails({
+    html: outputHtml,
+    classes: "govuk-!-font-size-16 govuk-!-margin-top-8",
+    summaryText: "PER assessment debug"
+  }) }}
 {% endblock %}
 
 {% block contentSidebar %}

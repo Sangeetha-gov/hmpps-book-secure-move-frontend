@@ -150,6 +150,24 @@ module.exports = {
       sortOrder: 2,
     },
   },
+  ASSESSMENT_ANSWERS_MAP: {
+    risk: {
+      // component: 'appPanelList',
+      component: 'govukSummaryList',
+      tagClass: 'app-tag--destructive',
+      sortOrder: 1,
+    },
+    health: {
+      // component: 'appPanelList',
+      component: 'govukSummaryList',
+      tagClass: '',
+      sortOrder: 2,
+    },
+    court: {
+      component: 'govukSummaryList',
+      sortOrder: 3,
+    },
+  },
   LOCATIONS_BATCH_SIZE: process.env.LOCATIONS_BATCH_SIZE || 40,
   E2E: {
     BASE_URL: process.env.E2E_BASE_URL || BASE_URL,
@@ -191,6 +209,10 @@ module.exports = {
   },
   FRAMEWORKS: {
     CURRENT_VERSION: process.env.FRAMEWORKS_VERSION || LATEST_FRAMEWORKS_BUILD,
+    assessmentAnswersMap: {
+      'risk-information': 'risk',
+      'health-information': 'health',
+    },
     FLAG_SETTINGS: {
       alert: {
         tagClass: 'app-tag--destructive',

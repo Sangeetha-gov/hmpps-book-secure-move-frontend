@@ -1,5 +1,6 @@
 const allocationService = require('../../common/services/allocation')
 const moveService = require('../../common/services/move')
+const personEscortRecordService = require('../../common/services/person-escort-record')
 
 module.exports = {
   setMove: async (req, res, next, moveId) => {
@@ -15,14 +16,30 @@ module.exports = {
     }
   },
 
-  setPersonEscortRecord: (req, res, next) => {
-    const personEscortRecord = req.move?.profile?.person_escort_record
+  // setPersonEscortRecord: (req, res, next) => {
+  //   const personEscortRecord = req.move?.profile?.person_escort_record
 
-    if (personEscortRecord) {
-      req.personEscortRecord = personEscortRecord
+  //   if (personEscortRecord) {
+  //     req.personEscortRecord = personEscortRecord
+  //   }
+
+  //   next()
+  // },
+
+  setPersonEscortRecord: async (req, res, next) => {
+    const recordId = req.move?.profile?.person_escort_record?.id
+
+    if (!recordId) {
+      return next()
     }
 
-    next()
+    try {
+      // TODO: Don't call every time. Look to make use of `include` on move to get the record from the move in one call where possible
+      req.personEscortRecord = await personEscortRecordService.getById(recordId)
+      next()
+    } catch (error) {
+      next(error)
+    }
   },
 
   setAllocation: async (req, res, next) => {
